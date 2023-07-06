@@ -51,31 +51,6 @@ public class Grid {
 
         for(int iter = 0; iter<minesCount; iter++){
             int randomIndex = ThreadLocalRandom.current().nextInt(0,  candidateCells.size());
-            boolean candidateFound = true;
-            //on vérifie qu'on ne crée pas une cell n'ayant que des bombes pour voisins
-//            do{
-//                randomIndex =ThreadLocalRandom.current().nextInt(0,  candidateCells.size());
-//                Cell randomCell = candidateCells.get(randomIndex);
-//                for(int i = 0; i< cells.size(); i++){
-//                    Cell cell = cells.get(i);
-//                    int cellPosition = cell.row * columns + cell.column;
-//                    if(!cell.hasBomb && cellPosition != randomCell.position) continue;
-//                    ArrayList<Cell> neighbours = getNeighbours(cell);
-//                    boolean hasFreeNeighbourCell = false;
-//                    for(int j = 0; j<neighbours.size(); j++){
-//                        Cell neighbour = neighbours.get(j);
-//                        if(!neighbour.hasBomb){
-//                            hasFreeNeighbourCell = true;
-//                            break;
-//                        }
-//                    }
-//                    if(!hasFreeNeighbourCell) {
-//                        candidateCells.remove(randomIndex);
-//                        candidateFound = false;
-//                        break;
-//                    }
-//                }
-//            } while (!candidateFound);
 
             Cell chosenCell = candidateCells.get(randomIndex);
             chosenCell.hasBomb = true;
@@ -116,19 +91,16 @@ public class Grid {
         return true;
     }
 
-    public void reveal(){
-        //passer toutes les cells à visible
-    }
 
     public ArrayList<Cell> getNeighbours(Cell cell){
-        ArrayList<Cell> neighbours = new ArrayList();
+        ArrayList<Cell> neighbours = new ArrayList<>();
         int cellRow = cell.row;
         int cellColumn = cell.column;
         int cellPosition = cell.position;
-        Boolean isFirstColumn = cellColumn == 0;
-        Boolean isFirstRow = cellRow == 0;
-        Boolean isLastRow = cellRow == rows-1;
-        Boolean isLastColumn = cellColumn == columns -1;
+        boolean isFirstColumn = cellColumn == 0;
+        boolean isFirstRow = cellRow == 0;
+        boolean isLastRow = cellRow == rows-1;
+        boolean isLastColumn = cellColumn == columns -1;
 
         //ajout cell N
         if(!isFirstRow)

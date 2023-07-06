@@ -64,19 +64,16 @@ public class Cell {
     }
     public void reveal(){
         this.state = CellState.REVEALED;
-//        Log.i("click", "row : "+row+" col : "+column+", hasbomb: "+ hasBomb+ " mines : "+ minesCount);
-        if(hasBomb && state != CellState.EXPLODED) cellView.setImageResource(getImage());
+        if(hasBomb) cellView.setImageResource(getImage());
         else cellView.setImageResource(getImage());
-
-        //get linearlyout child at position
-        //change display
-        //turn off clickable
     }
+
     public void unflag(){
         if(state != CellState.FLAGGED) return;
         state = CellState.HIDDEN;
         cellView.setImageResource(getImage());
     }
+
     public void flag(){
         if(state != CellState.HIDDEN) return;
         state = CellState.FLAGGED;
@@ -93,8 +90,5 @@ public class Cell {
     public void explode(){
         state = CellState.EXPLODED;
         cellView.setImageResource(getImage());
-    }
-    public void log(){
-        Log.i("cell", "row : "+row+" col : "+column+", hasbomb: "+ hasBomb+ " mines : "+ minesCount);
     }
 }

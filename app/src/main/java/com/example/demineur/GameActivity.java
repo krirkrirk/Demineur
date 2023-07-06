@@ -43,8 +43,7 @@ public class GameActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        ImageButton faceButton = (ImageButton) findViewById(R.id.face);
-                this.faceButton = faceButton;
+        this.faceButton =  findViewById(R.id.face);
         FaceTouchListener faceTouchListener = new FaceTouchListener();
         this.faceButton.setOnTouchListener(faceTouchListener);
 
@@ -55,14 +54,10 @@ public class GameActivity extends AppCompatActivity {
 
         int columns = 11;
         int rows = intent.getIntExtra("rows", 10);
-        int minesCount = intent.getIntExtra("minesCount", 5);
-        String gameType = intent.getStringExtra("gameType");
-        this.gameType = gameType;
-        this.minesCount = minesCount;
+        this.gameType = intent.getStringExtra("gameType");
+        this.minesCount = intent.getIntExtra("minesCount", 5);
         this.displayedMinesCount = minesCount;
-        Log.i("rows", String.valueOf(rows));
-        Log.i("col", String.valueOf(columns));
-        Log.i("height/rows", String.valueOf(height/rows));
+
         updateMineCounterImages(minesCount);
 
         grid = new Grid(rows, columns, minesCount);
@@ -80,42 +75,36 @@ public class GameActivity extends AppCompatActivity {
                 cellView.setScaleType(ImageView.ScaleType.FIT_XY);
 
                 TableRow.LayoutParams params = new TableRow.LayoutParams(width/11, (int) Math.round(0.9*height/rows));
-//
                 cellView.setLayoutParams(params);
                 cell.setCellView(cellView);
-                cellView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(grid.isTerminated) return ;
-                        if(!grid.isPopulated) {
-                            onNewGame(cellPosition);
-
-                        }
-                        if(cell.hasBomb){
-                            onLostGame();
-                            cell.explode();
-                        } else {
-                            grid.revealCell(cellPosition);
-                            if(grid.isSolved()){
-                                onWonGame();
-                            }
+                cellView.setOnClickListener(view -> {
+                    if(grid.isTerminated) return;
+                    if(cell.state != Cell.CellState.HIDDEN) return;
+                    if(!grid.isPopulated) {
+                        onNewGame(cellPosition);
+                    }
+                    if(cell.hasBomb){
+                        onLostGame();
+                        cell.explode();
+                    } else {
+                        grid.revealCell(cellPosition);
+                        if(grid.isSolved()){
+                            onWonGame();
                         }
                     }
                 });
-                cellView.setOnLongClickListener(new View.OnLongClickListener(){
-                    @Override
-                    public boolean onLongClick(View view) {
-                        if(!grid.isPopulated || grid.isTerminated) return true;
-                        if (cell.state == Cell.CellState.FLAGGED) {
-                            cell.unflag();
-                            displayedMinesCount++;
-                        } else {
-                            cell.flag();
-                            displayedMinesCount--;
-                        }
+                cellView.setOnLongClickListener(view -> {
+                    if(!grid.isPopulated || grid.isTerminated) return true;
+                    if (cell.state == Cell.CellState.FLAGGED) {
+                        cell.unflag();
+                        displayedMinesCount++;
                         updateMineCounterImages(displayedMinesCount);
-                        return true;
+                    } else if (cell.state == Cell.CellState.HIDDEN){
+                        cell.flag();
+                        displayedMinesCount--;
+                        updateMineCounterImages(displayedMinesCount);
                     }
+                    return true;
                 });
                 tableRow.addView(cellView);
             }
@@ -129,7 +118,7 @@ public class GameActivity extends AppCompatActivity {
         SharedPreferences.Editor shEdit = sh.edit();
         int gamesPlayed= sh.getInt("gamesPlayed_"+gameType, 0);
         shEdit.putInt("gamesPlayed_"+gameType, gamesPlayed+1);
-        shEdit.commit();
+        shEdit.apply();
         grid.populate(firstCellClicked);
         startTimer();
     }
@@ -163,7 +152,7 @@ public class GameActivity extends AppCompatActivity {
         int gamesWon = sh.getInt("gamesWon_"+gameType, 0);
         shEdit.putInt("gamesWon_"+gameType, gamesWon+1);
 
-        shEdit.commit();
+        shEdit.apply();
 
         stopTimer();
         faceButton.setImageResource(R.drawable.face_win);
@@ -191,25 +180,12 @@ public class GameActivity extends AppCompatActivity {
     public void timerTick(){
         if(!running) return;
         seconds++;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                updateTimerImages();
-            }
-        });
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                timerTick();
-            }
-        }, 1000);
+        runOnUiThread(() -> updateTimerImages());
+        new Handler().postDelayed(() -> timerTick(), 1000);
     }
     public void startTimer(){
         running = true;
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                timerTick();
-            }
-        }, 1000);
+        new Handler().postDelayed(() -> timerTick(), 1000);
     }
     public void onResetGame(){
         grid.reset();
@@ -254,8 +230,8 @@ public class GameActivity extends AppCompatActivity {
 
 
     public void updateMineCounterImages(int minesNumber){
-        ImageView minesCounterTens = (ImageView) findViewById(R.id.minesCounterTens);
-        ImageView minesCounterUnits = (ImageView) findViewById(R.id.minesCounterUnits);
+        ImageView minesCounterTens = findViewById(R.id.minesCounterTens);
+        ImageView minesCounterUnits = findViewById(R.id.minesCounterUnits);
 
         if(minesNumber<0){
             minesCounterTens.setImageResource(R.drawable.dminus);
@@ -267,9 +243,9 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void updateTimerImages(){
-        ImageView timerUnits = (ImageView) findViewById(R.id.timerUnits);
-        ImageView timerTens = (ImageView) findViewById(R.id.timerTens);
-        ImageView timerHundreds = (ImageView) findViewById(R.id.timerHundreds);
+        ImageView timerUnits =  findViewById(R.id.timerUnits);
+        ImageView timerTens =  findViewById(R.id.timerTens);
+        ImageView timerHundreds = findViewById(R.id.timerHundreds);
         timerUnits.setImageResource(getNumberImage(seconds%10));
         timerTens.setImageResource(getNumberImage(Math.round(seconds/10)%10));
         timerHundreds.setImageResource(getNumberImage(Math.round(seconds/100)%10));
