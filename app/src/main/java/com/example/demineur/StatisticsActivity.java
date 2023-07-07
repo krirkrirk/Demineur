@@ -25,9 +25,9 @@ public class StatisticsActivity extends AppCompatActivity {
         this.gameType = 0;
 
         SharedPreferences sh = getSharedPreferences("Démineur", Context.MODE_PRIVATE);
-        this.highscores = new int[]{sh.getInt("highscore_easy", 999), sh.getInt("highscore_medium"+gameType, 999),sh.getInt("highscore_expert", 999) };
-        this.gamesPlayed = new int[]{sh.getInt("gamesPlayed_easy", 0), sh.getInt("gamesPlayed_medium"+gameType, 0),sh.getInt("gamesPlayed_expert", 0) };
-        this.gamesWon = new int[]{sh.getInt("gamesWon_easy", 0), sh.getInt("gamesWon_medium"+gameType, 0),sh.getInt("gamesWon_expert", 0) };
+        this.highscores = new int[]{sh.getInt("highscore_easy", 999), sh.getInt("highscore_medium", 999),sh.getInt("highscore_expert", 999) };
+        this.gamesPlayed = new int[]{sh.getInt("gamesPlayed_easy", 0), sh.getInt("gamesPlayed_medium", 0),sh.getInt("gamesPlayed_expert", 0) };
+        this.gamesWon = new int[]{sh.getInt("gamesWon_easy", 0), sh.getInt("gamesWon_medium", 0),sh.getInt("gamesWon_expert", 0) };
         updateButtons();
         updateStats();
 
