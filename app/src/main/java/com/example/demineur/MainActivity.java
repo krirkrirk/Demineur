@@ -28,14 +28,14 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(MainActivity.this, GameActivity.class);
         i.putExtra("rows", 25);
         i.putExtra("minesCount", 25);
-        i.putExtra("gameType", "easy");
+        i.putExtra("gameType", "medium");
         startActivity(i);
     }
     public void onExpertNewGame(View v){
         Intent i = new Intent(MainActivity.this, GameActivity.class);
         i.putExtra("rows", 25);
         i.putExtra("minesCount", 50);
-        i.putExtra("gameType", "easy");
+        i.putExtra("gameType", "expert");
         startActivity(i);
     }
 

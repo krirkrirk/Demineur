@@ -64,8 +64,7 @@ public class Cell {
     }
     public void reveal(){
         this.state = CellState.REVEALED;
-        if(hasBomb) cellView.setImageResource(getImage());
-        else cellView.setImageResource(getImage());
+        cellView.setImageResource(getImage());
     }
 
     public void unflag(){

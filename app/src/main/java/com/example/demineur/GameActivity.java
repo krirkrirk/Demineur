@@ -64,6 +64,7 @@ public class GameActivity extends AppCompatActivity {
         ArrayList<Cell> cells = grid.getCells();
         TableLayout table = findViewById(R.id.gridTableLayout);
 
+
         for(int i = 0; i< rows; i++){
             TableRow tableRow = new TableRow(this);
             for(int j = 0; j<columns; j++){
@@ -74,7 +75,7 @@ public class GameActivity extends AppCompatActivity {
                 cellView.setPadding(0, 0, 0, 0);
                 cellView.setScaleType(ImageView.ScaleType.FIT_XY);
 
-                TableRow.LayoutParams params = new TableRow.LayoutParams(width/11, (int) Math.round(0.9*height/rows));
+                TableRow.LayoutParams params = new TableRow.LayoutParams(width/11, (int) Math.round(0.85*height/rows));
                 cellView.setLayoutParams(params);
                 cell.setCellView(cellView);
                 cellView.setOnClickListener(view -> {
